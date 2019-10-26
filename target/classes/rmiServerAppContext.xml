@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Beans Declaration -->
+    <bean id="UserMap" class="java.util.concurrent.ConcurrentHashMap" />
+
+    <bean id="UserServiceImpl" class="com.example.rmi.services.UserServiceImpl">
+        <property name="userMap" ref="UserMap"/>
+    </bean>
+
+    <bean id="RMIServiceImpl" class="com.example.rmi.services.RMIServiceImpl" >
+        <property name="userService" ref="UserServiceImpl"/>
+    </bean>
+
+    <!-- RMI Server Declaration -->
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+
+        <!-- serviceName represents RMI Service Name -->
+        <property name="serviceName" value="RMIServiceImpl"/>
+
+        <!-- service represents RMI Object(RMI Service Impl) -->
+        <property name="service" ref="RMIServiceImpl"/>
+
+        <!-- serviceInterface represents RMI Service Interface exposed -->
+        <property name="serviceInterface" value="com.example.rmi.services.RMIService"/>
+
+        <!-- defaults to 1099 -->
+        <property name="registryPort" value="1099"/>
+
+    </bean>
+
+</beans>
